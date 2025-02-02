@@ -15,9 +15,6 @@ import * as path from 'path'
 import { parse } from 'csv-parse/sync'
 import { stringify } from 'csv-stringify/sync'
 
-// -----------------------------------------------------
-// 1. INTERFACE
-// -----------------------------------------------------
 interface CardRecord {
     indexKey?: number // The row index in sorted order (File One)
     first12?: string // For partial digits from File Two
@@ -29,9 +26,6 @@ interface CardRecord {
     issuingNetwork?: string
 }
 
-// -----------------------------------------------------
-// 2. SORTING HELPER
-// -----------------------------------------------------
 function sortByDatePin(records: CardRecord[]): CardRecord[] {
     return records.sort((a, b) => {
         const [aMonth, aYear] = a.expiryDate?.split('/').map(Number) ?? []
@@ -48,9 +42,6 @@ function sortByDatePin(records: CardRecord[]): CardRecord[] {
     })
 }
 
-// -----------------------------------------------------
-// 3. READ CSV FILE ONE (SORT BEFORE INDEX)
-// -----------------------------------------------------
 /**
  * readCsvFileOne:
  *  1) Parse CSV into array of "raw" CardRecords (with last4).
@@ -92,9 +83,6 @@ function readCsvFileOne(filePath: string): CardRecord[] {
     return finalRecords
 }
 
-// -----------------------------------------------------
-// 4. READ CSV FILE TWO
-// -----------------------------------------------------
 /**
  * readCsvFileTwo:
  *  1) Parse CSV into array of "raw" CardRecords (with first12).
@@ -128,10 +116,6 @@ function readCsvFileTwo(
 
     return intermediate
 }
-
-// -----------------------------------------------------
-// 5. MATCHING LOGIC (ROW-BY-ROW or DICTIONARY)
-// -----------------------------------------------------
 
 /**
  * combineRowByRow:
@@ -195,9 +179,6 @@ function matchByIndexDictionary(
     return merged
 }
 
-// -----------------------------------------------------
-// 6. WRITE CSV
-// -----------------------------------------------------
 function writeCsvFile(filePath: string, records: CardRecord[]): void {
     const outputRows = records.map((r) => ({
         'Credit Card Number': r.fullCardNumber ?? '',
@@ -210,10 +191,6 @@ function writeCsvFile(filePath: string, records: CardRecord[]): void {
     fs.writeFileSync(path.resolve(filePath), csvOut, 'utf-8')
     console.log(`Wrote ${records.length} rows to ${filePath}`)
 }
-
-// -----------------------------------------------------
-// 7. BENCHMARKING
-// -----------------------------------------------------
 
 function benchmarkBoth(fileOne: CardRecord[], fileTwo: CardRecord[]) {
     console.log(
@@ -239,9 +216,6 @@ function benchmarkBoth(fileOne: CardRecord[], fileTwo: CardRecord[]) {
     )
 }
 
-// -----------------------------------------------------
-// 8. matchCreditCards
-// -----------------------------------------------------
 function matchCreditCards() {
     try {
         const fileOnePath = './carddump2.csv'
