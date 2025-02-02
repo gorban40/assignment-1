@@ -1,4 +1,4 @@
-# Project Name
+# Assignment 1
 
 This project is a TypeScript-based application that includes various algorithms and utilities. The main entry point for the application is `index.js` located in the `dist` directory.
 
